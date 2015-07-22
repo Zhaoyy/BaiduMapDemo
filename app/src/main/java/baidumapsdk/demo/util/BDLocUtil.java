@@ -27,8 +27,6 @@ public class BDLocUtil {
   private static BDLocationListener defaultLocListener = new BDLocationListener() {
     @Override public void onReceiveLocation(BDLocation bdLocation) {
 
-      Log.e(TAG, "type:" + bdLocation.getLocType());
-
       switch (bdLocation.getLocType()) {
         case BDLocation.TypeGpsLocation: // 61
         case BDLocation.TypeNetWorkLocation: //161
@@ -91,14 +89,15 @@ public class BDLocUtil {
     locationClient.requestLocation();
   }
 
-
   public static String getLocationInfo(BDLocation location) {
     StringBuilder sb = new StringBuilder();
     sb.append("type:" + location.getLocType() + "\n")
         .append("lat:" + location.getLatitude() + "\n")
         .append("lon:" + location.getLongitude() + "\n")
         .append("addr:" + location.getAddrStr() + "\n")
-        .append("city:" + location.getCity());
+        .append("city:" + location.getCity() + "\n")
+        .append("district:" + location.getDistrict() + "\n")
+        .append("street:" + location.getStreet());
 
     return sb.toString();
   }

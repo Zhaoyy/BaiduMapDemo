@@ -44,6 +44,9 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".PoiSearchActivity"
+        android:label="检索功能"/>
+
     <service
         android:name="com.baidu.location.f"
         android:enabled="true"

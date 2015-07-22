@@ -2,6 +2,7 @@ package baidumapsdk.demo;
 
 import android.app.Application;
 import baidumapsdk.demo.util.BDLocUtil;
+import com.baidu.mapapi.SDKInitializer;
 
 /**
  * MyApplication
@@ -17,5 +18,6 @@ public class MyApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
     BDLocUtil.init(getApplicationContext());
+    SDKInitializer.initialize(getApplicationContext());
   }
 }
