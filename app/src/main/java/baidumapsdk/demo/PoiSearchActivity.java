@@ -13,14 +13,17 @@ import android.widget.Toast;
 import baidumapsdk.demo.util.BDLocUtil;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
+import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.poi.PoiSortType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,6 @@ public class PoiSearchActivity extends AppCompatActivity {
   private static String TAG = "PoiSearchActivity";
   private PoiSearch poiSearch;
 
-  private TextView tvHello;
   private ListView listView;
 
   private List<PoiInfo> data;
@@ -44,7 +46,6 @@ public class PoiSearchActivity extends AppCompatActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    tvHello = (TextView) findViewById(R.id.tvHello);
     listView = (ListView) findViewById(R.id.listView);
 
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,18 +82,24 @@ public class PoiSearchActivity extends AppCompatActivity {
         Log.e(TAG, poiDetailResult.error + "");
         if (poiDetailResult.error == PoiResult.ERRORNO.NO_ERROR) {
           showInfoDialog(poiDetailResult);
-
         } else if (poiDetailResult.error == PoiResult.ERRORNO.ST_EN_TOO_NEAR) {
           Toast.makeText(PoiSearchActivity.this, "就在附近，好好找找", Toast.LENGTH_SHORT).show();
         }
       }
     });
 
-    poiSearch.searchInCity(
-        new PoiCitySearchOption().city(location.getCity()).keyword("加油站").pageCapacity(20) //每页数据量
-            .pageNum(0));   // 页码
+    // 市内检索
+    //poiSearch.searchInCity(
+    //    new PoiCitySearchOption().city(location.getCity()).keyword("加油站").pageCapacity(20) //每页数据量
+    //        .pageNum(0));   // 页码
 
-
+    // 附近检索
+    poiSearch.searchNearby(new PoiNearbySearchOption().keyword("加油站")
+        .location(new LatLng(location.getLatitude(), location.getLongitude()))
+        .pageCapacity(10)
+        .pageNum(0)
+        .radius(100 * 1000)
+        .sortType(PoiSortType.distance_from_near_to_far));
   }
 
   private String getPoiDetailInfo(PoiDetailResult result) {
@@ -105,8 +112,7 @@ public class PoiSearchActivity extends AppCompatActivity {
   }
 
   private void showInfoDialog(PoiDetailResult result) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this)
-        .setTitle(result.getName())
+    AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(result.getName())
         .setCancelable(true)
         .setMessage(getPoiDetailInfo(result));
     builder.show();

@@ -73,6 +73,10 @@ public class BDLocUtil {
     option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
   }
 
+  public static boolean hasGetLocation() {
+    return lastLocation != null;
+  }
+
   public static BDLocation getLastLocation() {
     return lastLocation;
   }

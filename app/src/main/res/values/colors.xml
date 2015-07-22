@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- text color  -->
+  <color name="text_black_1">#DF000000</color>
+  <color name="text_black_2">#8A000000</color>
+  <color name="text_black_3">#43000000</color>
+  <color name="text_black_4">#1F000000</color>
+  <color name="text_black_5">#08000000</color>
+
+  <color name="app_main_color">#14E715</color>
+  <color name="orange">#FF9800</color>
+  <color name="orange_dark">#Ef6C00</color>
+  <color name="orange_light">#FFB74D</color>
+
+  <color name="flow_item_selected">#fff3f4f5</color>
+
+  <color name="item_header_color">#E2E7EE</color>
+  <color name="tab_color_bg">#E0E0E0</color>
+  <color name="white">#FFFFFF</color>
+  <color name="title_header_color">#40567E</color>
+  <color name="forum_display_item_title_color">#22229C</color>
+  <color name="title_header_color_dark">#25334B</color>
+  <color name="title_header_color_light">#6E88B6</color>
+  <color name="item_pressed">#E5E5E5</color>
+  <color name="quick_reply_btn_pressed">#E5E5E5</color>
+  <color name="gray">#808080</color>
+  <color name="transparent">#00000000</color>
+  <color name="canvas">#DEE3E7</color>
+  <color name="deepgray">#636973</color>
+  <color name="red">#B22222</color>
+
+  <color name="ics_blue_bright">#ff38c0f4</color>
+  <color name="ics_blue_dark">#ff0099cc</color>
+  <color name="ics_blue_light">#ff33b5e5</color>
+  <color name="ics_green_dark">#ff669900</color>
+  <color name="ics_green_light">#ff99cc00</color>
+  <color name="ics_orange_dark">#ffff8800</color>
+  <color name="ics_orange_light">#ffffbb33</color>
+  <color name="ics_purple_dark">#ff9933cc</color>
+  <color name="ics_purple_light">#ffaa66cc</color>
+  <color name="ics_red_dark">#ffcc0000</color>
+  <color name="ics_red_light">#ffff4444</color>
+</resources>

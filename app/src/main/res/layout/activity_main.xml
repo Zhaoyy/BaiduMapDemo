@@ -1,26 +1,143 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context=".MainActivity"
     >
 
-  <TextView
-      android:id="@+id/tvHello"
-      android:text="@string/hello_world"
-      android:layout_width="wrap_content"
+  <LinearLayout
+      android:id="@+id/ll_search"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:minHeight="56dp"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:background="@android:color/white"
+      android:focusable="true"
+      android:focusableInTouchMode="true"
+      android:paddingRight="8dp"
+      >
+
+    <ImageButton
+        android:id="@+id/ibtn_back"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/common_icon_back_btn_normal"
+        android:background="@drawable/quik_search_btn_bg"
+        />
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_weight="1.0"
+        android:editable="false"
+        android:gravity="center_vertical"
+        android:drawableLeft="@mipmap/common_icon_searchbox_magnifier_2"
+        android:drawablePadding="8dp"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:hint="搜索"
+        android:background="@drawable/search_et_bg"
+        />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        style="@style/search_btn_style"
+        android:text="搜索"
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/white"
+        android:background="@drawable/search_btn_bg"
+        />
+
+  </LinearLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1px"
+      android:background="@color/text_black_5"
       />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:background="@drawable/search_grid_bg"
+      android:layout_margin="8dp"
+      android:padding="8dp"
+      android:gravity="center_vertical"
+      >
+
+    <Button
+        android:id="@+id/btn_oil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="加油站"
+        style="@style/search_btn_style"
+        />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/text_black_4"
+        />
+
+    <Button
+        android:id="@+id/btn_park"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="停车场"
+        style="@style/search_btn_style"
+        />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/text_black_4"
+        />
+
+    <Button
+        android:id="@+id/btn_hotel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="旅馆"
+        style="@style/search_btn_style"
+        />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/text_black_4"
+        />
+
+    <Button
+        android:id="@+id/btn_food"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:text="饭店"
+        style="@style/search_btn_style"
+        />
+
+  </LinearLayout>
 
   <ListView
       android:id="@+id/listView"
-      android:layout_below="@id/tvHello"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_marginLeft="8dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginRight="8dp"
+      android:background="@color/white"
+      android:scrollbars="none"
+      android:dividerHeight="1px"
       />
 
-</RelativeLayout>
+</LinearLayout>

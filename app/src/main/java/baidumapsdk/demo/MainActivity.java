@@ -6,27 +6,99 @@ import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import baidumapsdk.demo.util.AndroidHelper;
 import baidumapsdk.demo.util.BDLocUtil;
+import baidumapsdk.demo.util.LogHelper;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-  private TextView tvHello;
+  private LinearLayout ll_search;
+  private ImageButton ibtn_back;
+  private EditText et_search;
+  private Button btn_search;
+  private Button btn_oil;
+  private Button btn_park;
+  private Button btn_hotel;
+  private Button btn_food;
   private ListView listView;
+
+  private BDLocation currentLoc;
+  private MHandler mHandler = new MHandler();
+
+  private SuggestionSearch suggestionSearch;
+  private List<SuggestionResult.SuggestionInfo> suggestionInfos =
+      new ArrayList<SuggestionResult.SuggestionInfo>();
+
+  private SuggestionAdapter adapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    tvHello = (TextView) findViewById(R.id.tvHello);
+    ll_search = (LinearLayout) findViewById(R.id.ll_search);
+    ibtn_back = (ImageButton) findViewById(R.id.ibtn_back);
+    et_search = (EditText) findViewById(R.id.et_search);
+    btn_search = (Button) findViewById(R.id.btn_search);
+    btn_oil = (Button) findViewById(R.id.btn_oil);
+    btn_park = (Button) findViewById(R.id.btn_park);
+    btn_hotel = (Button) findViewById(R.id.btn_hotel);
+    btn_food = (Button) findViewById(R.id.btn_food);
     listView = (ListView) findViewById(R.id.listView);
+
+    ibtn_back.setOnClickListener(this);
+    btn_search.setOnClickListener(this);
+    btn_oil.setOnClickListener(this);
+    btn_park.setOnClickListener(this);
+    btn_hotel.setOnClickListener(this);
+    btn_food.setOnClickListener(this);
+
+    et_search.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override public void afterTextChanged(Editable s) {
+        String key = s.toString();
+        if (TextUtils.isEmpty(key)) {
+          loadSearchHistory();
+          return;
+        }
+
+        LogHelper.e("key:" + key + " city:" + currentLoc.getCity());
+        suggestionSearch.requestSuggestion(
+            new SuggestionSearchOption().keyword(key).city(currentLoc.getCity()));
+      }
+    });
 
     ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
@@ -47,32 +119,151 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    BDLocUtil.registerLocListener(new BDLocationListener() {
-      @Override public void onReceiveLocation(BDLocation bdLocation) {
-        tvHello.setText(BDLocUtil.getLocationInfo(bdLocation));
+    adapter = new SuggestionAdapter();
+    listView.setAdapter(adapter);
+
+    suggestionSearch = SuggestionSearch.newInstance();
+
+    suggestionSearch.setOnGetSuggestionResultListener(new OnGetSuggestionResultListener() {
+      @Override public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+        if (suggestionResult == null
+            || suggestionResult.getAllSuggestions() == null) {
+          return;
+        }
+
+        suggestionInfos = suggestionResult.getAllSuggestions();
+
+        adapter.setData(suggestionInfos);
       }
     });
 
     BDLocUtil.startLocation();
+
+    new CheckLocThread().start();
   }
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_main, menu);
-    return true;
+  private void loadSearchHistory() {
+    // todo: load search history
+    suggestionInfos = new ArrayList<SuggestionResult.SuggestionInfo>();
+    adapter.setData(suggestionInfos);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
+  private void getLocation() {
 
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
+    currentLoc = BDLocUtil.getLastLocation();
+
+    if (currentLoc == null || currentLoc.getLatitude() < 1 || currentLoc.getLongitude() < 1) {
+      Toast.makeText(this, "获取当前位置失败，请检查是否禁用应用获取位置的权限！", Toast.LENGTH_SHORT).show();
+      et_search.setEnabled(false);
+      return;
     }
 
-    return super.onOptionsItemSelected(item);
+    et_search.setEnabled(true);
+    if (TextUtils.isEmpty(currentLoc.getStreet())) {
+      et_search.setHint(String.format("在%s附件搜索", currentLoc.getCity()));
+    } else {
+      et_search.setHint(String.format("在%s附件搜索", currentLoc.getStreet()));
+    }
+  }
+
+  @Override public void onClick(View v) {
+
+  }
+
+  @Override protected void onDestroy() {
+    if (suggestionSearch != null) {
+      suggestionSearch.destroy();
+    }
+    super.onDestroy();
+  }
+
+  class SuggestionAdapter extends BaseAdapter {
+
+    private List<SuggestionResult.SuggestionInfo> data =
+        new ArrayList<SuggestionResult.SuggestionInfo>();
+
+    public void setData(List<SuggestionResult.SuggestionInfo> data) {
+      this.data = data;
+      notifyDataSetChanged();
+    }
+
+    @Override public int getCount() {
+      return data.size();
+    }
+
+    @Override public Object getItem(int position) {
+      return data.get(position);
+    }
+
+    @Override public long getItemId(int position) {
+      return position;
+    }
+
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
+
+      ViewHolder holder = null;
+
+      if (convertView == null) {
+        convertView = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.item_suggestion, parent, false);
+        holder = new ViewHolder();
+        holder.tv_key = (TextView) convertView.findViewById(R.id.tv_key);
+        holder.tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
+        holder.iv = (ImageView) convertView.findViewById(R.id.iv);
+
+        convertView.setTag(holder);
+      } else {
+        holder = (ViewHolder) convertView.getTag();
+      }
+
+      SuggestionResult.SuggestionInfo info = data.get(position);
+
+      holder.tv_key.setText(info.key);
+
+      String detail = info.city + info.district;
+
+      if (TextUtils.isEmpty(detail)) {
+        holder.tv_detail.setVisibility(View.GONE);
+        holder.iv.setImageResource(R.mipmap.common_icon_searchbox_magnifier_new);
+      } else {
+        holder.tv_detail.setVisibility(View.VISIBLE);
+        holder.tv_detail.setText(detail);
+        holder.iv.setImageResource(R.mipmap.icon_menzhi);
+      }
+
+      return convertView;
+    }
+
+    class ViewHolder {
+      public TextView tv_key;
+      public TextView tv_detail;
+      public ImageView iv;
+    }
+  }
+
+  class CheckLocThread extends Thread {
+    private static final int MAX_TRY_NUM = 30;
+
+    @Override public void run() {
+      int t = 0;
+      while (!BDLocUtil.hasGetLocation() && t < MAX_TRY_NUM) {
+        AndroidHelper.sleep(1000);
+        t++;
+      }
+
+      mHandler.sendEmptyMessage(0);
+    }
+  }
+
+  class MHandler extends Handler {
+    @Override public void handleMessage(Message msg) {
+      switch (msg.what) {
+        case 0:
+          getLocation();
+          break;
+        default:
+          break;
+      }
+    }
   }
 }
