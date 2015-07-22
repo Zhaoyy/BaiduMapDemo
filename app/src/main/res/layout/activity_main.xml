@@ -33,7 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_weight="1.0"
-        android:editable="false"
+        android:enabled="false"
         android:gravity="center_vertical"
         android:drawableLeft="@mipmap/common_icon_searchbox_magnifier_2"
         android:drawablePadding="8dp"

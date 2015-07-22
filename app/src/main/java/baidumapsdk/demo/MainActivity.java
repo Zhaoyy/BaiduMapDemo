@@ -1,17 +1,14 @@
 package baidumapsdk.demo;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,9 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import baidumapsdk.demo.util.AndroidHelper;
 import baidumapsdk.demo.util.BDLocUtil;
-import baidumapsdk.demo.util.LogHelper;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
@@ -57,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       new ArrayList<SuggestionResult.SuggestionInfo>();
 
   private SuggestionAdapter adapter;
+  private String key = "";
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -88,13 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       }
 
       @Override public void afterTextChanged(Editable s) {
-        String key = s.toString();
+        key = s.toString();
         if (TextUtils.isEmpty(key)) {
           loadSearchHistory();
           return;
         }
 
-        LogHelper.e("key:" + key + " city:" + currentLoc.getCity());
         suggestionSearch.requestSuggestion(
             new SuggestionSearchOption().keyword(key).city(currentLoc.getCity()));
       }
@@ -107,15 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-          case 0:
-            Intent intent = new Intent(MainActivity.this, PoiSearchActivity.class);
+        SuggestionResult.SuggestionInfo info =
+            (SuggestionResult.SuggestionInfo) adapter.getItem(position);
 
-            MainActivity.this.startActivity(intent);
-            break;
-          default:
-            break;
-        }
+        gotoSearchResult(info);
       }
     });
 
@@ -148,6 +138,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     adapter.setData(suggestionInfos);
   }
 
+  private void gotoSearchResult(String key) {
+    // todo: goto search result
+    resetControl();
+    Intent intent = new Intent(this, PoiSearchActivity.class);
+    intent.putExtra("key", key);
+
+    startActivity(intent);
+  }
+
+  private void gotoSearchResult(SuggestionResult.SuggestionInfo info) {
+    resetControl();
+
+    Intent intent = new Intent(this, PoiSearchActivity.class);
+    intent.putExtra("key", info.key);
+    intent.putExtra("city", info.city);
+
+    startActivity(intent);
+  }
+
+  private void resetControl() {
+    et_search.setText("");
+  }
+
   private void getLocation() {
 
     currentLoc = BDLocUtil.getLastLocation();
@@ -167,7 +180,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   @Override public void onClick(View v) {
-
+    switch (v.getId()) {
+      case R.id.ibtn_back:
+        onBackPressed();
+        break;
+      case R.id.btn_search:
+        gotoSearchResult(key);
+        break;
+      case R.id.btn_food:
+        gotoSearchResult("饭店");
+        break;
+      case R.id.btn_hotel:
+        gotoSearchResult("旅馆");
+        break;
+      case R.id.btn_oil:
+        gotoSearchResult("加油站");
+        break;
+      case R.id.btn_park:
+        gotoSearchResult("停车场");
+        break;
+      default:
+        break;
+    }
   }
 
   @Override protected void onDestroy() {
@@ -218,7 +252,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
       SuggestionResult.SuggestionInfo info = data.get(position);
 
-      holder.tv_key.setText(info.key);
+      if (TextUtils.isEmpty(key)) {
+        holder.tv_key.setText(info.key);
+      } else {
+        holder.tv_key.setText(AndroidHelper.setSpannableTextColor(info.key, key));
+      }
+
 
       String detail = info.city + info.district;
 

@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import baidumapsdk.demo.R;
 import java.io.File;
 
 /**
@@ -100,5 +104,30 @@ public class AndroidHelper {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  public static SpannableString setSpannableTextColor(String text, String key) {
+    if (!text.contains(key)) {
+      throw new RuntimeException("not found key!");
+    }
+
+    int start = text.indexOf(key);
+    int end = start + key.length();
+
+    return setSpannableTextColor(text, start, end);
+  }
+
+  private static SpannableString setSpannableTextColor(String text, int start, int end) {
+    if (start < 0 || end >= text.length()) {
+      throw new RuntimeException("out of index");
+    }
+
+    SpannableString spannableString = new SpannableString(text);
+    ForegroundColorSpan span =
+        new ForegroundColorSpan(mContext.getResources().getColor(R.color.ics_blue_dark));
+
+    spannableString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spannableString;
   }
 }
