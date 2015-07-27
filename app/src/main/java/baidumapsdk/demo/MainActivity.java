@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import baidumapsdk.demo.util.AndroidHelper;
 import baidumapsdk.demo.util.BDLocUtil;
+import baidumapsdk.demo.util.ToastHelper;
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   private SuggestionAdapter adapter;
   private String key = "";
+
+  private Intent intent;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -139,26 +142,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   private void gotoSearchResult(String key) {
-    // todo: goto search result
-    resetControl();
-    Intent intent = new Intent(this, PoiSearchActivity.class);
+
+    if (TextUtils.isEmpty(key)) {
+      ToastHelper.toastShort(this, "请填写要查询的内容");
+      return;
+    }
+
+    Intent intent = getPoiResultIntent();
     intent.putExtra("key", key);
 
     startActivity(intent);
   }
 
   private void gotoSearchResult(SuggestionResult.SuggestionInfo info) {
-    resetControl();
-
-    Intent intent = new Intent(this, PoiSearchActivity.class);
+    Intent intent = getPoiResultIntent();
     intent.putExtra("key", info.key);
     intent.putExtra("city", info.city);
+    intent.putExtra("district", info.district);
 
     startActivity(intent);
   }
 
-  private void resetControl() {
-    et_search.setText("");
+  private Intent getPoiResultIntent() {
+    if (intent == null) {
+      intent = new Intent(this, PoiSearchActivity.class);
+      if (currentLoc != null) {
+        intent.putExtra("clat", currentLoc.getLatitude());
+        intent.putExtra("clon", currentLoc.getLongitude());
+      }
+    }
+    return intent;
   }
 
   private void getLocation() {
@@ -172,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     et_search.setEnabled(true);
+    et_search.requestFocus();
     if (TextUtils.isEmpty(currentLoc.getStreet())) {
       et_search.setHint(String.format("在%s附件搜索", currentLoc.getCity()));
     } else {
@@ -255,7 +269,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       if (TextUtils.isEmpty(key)) {
         holder.tv_key.setText(info.key);
       } else {
-        holder.tv_key.setText(AndroidHelper.setSpannableTextColor(info.key, key));
+        if (info.key.contains(key)) {
+          holder.tv_key.setText(AndroidHelper.setSpannableTextColor(info.key, key));
+        } else {
+          holder.tv_key.setText(info.key);
+        }
       }
 
 

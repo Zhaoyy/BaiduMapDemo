@@ -3,8 +3,10 @@ package baidumapsdk.demo.util;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -129,5 +131,11 @@ public class AndroidHelper {
     spannableString.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannableString;
+  }
+
+  public static void telephone_call(Context context, String num) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("tel:" + num));
+    context.startActivity(intent);
   }
 }

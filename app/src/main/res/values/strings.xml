@@ -4,6 +4,9 @@
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
 
+  <string name="go_to_there">到这儿去</string>
+  <string name="tel">电话</string>
+
   <string-array name="array_menu">
     <item>附近搜索</item>
   </string-array>
