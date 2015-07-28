@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BDLocUtil.startLocation();
 
     new CheckLocThread().start();
+    BDLocUtil.requestLocation();
   }
 
   private void loadSearchHistory() {

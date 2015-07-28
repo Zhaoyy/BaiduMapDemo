@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import baidumapsdk.demo.model.MyPoiInfo;
 import baidumapsdk.demo.util.AndroidHelper;
-import baidumapsdk.demo.util.ToastHelper;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
@@ -168,12 +167,22 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
     List<MyPoiInfo> data = new ArrayList<MyPoiInfo>();
     data.add(new MyPoiInfo(info));
 
-    gotoMap(data);
+    gotoMapActivity(data);
   }
 
-  private void gotoMap(List<MyPoiInfo> data) {
-    Intent intent = getMapIntent();
+  private void gotoMap(List<PoiInfo> infos) {
+    List<MyPoiInfo> data = new ArrayList<MyPoiInfo>();
 
+    for (PoiInfo info : infos) {
+      data.add(new MyPoiInfo(info));
+    }
+
+    gotoMapActivity(data);
+  }
+
+  private void gotoMapActivity(List<MyPoiInfo> data) {
+    Intent intent = getMapIntent();
+    intent.putExtra("title", key);
     intent.putExtra("data", (Serializable) data);
 
     this.startActivity(intent);
@@ -185,6 +194,14 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
     intent.putExtra("clon", cLatLng.longitude);
 
     return intent;
+  }
+
+  private void gotoMapRouteGuid(PoiInfo info) {
+    Intent intent = getMapIntent();
+    intent.putExtra("type", 2);
+    intent.putExtra("title", "前往 " + info.name);
+    intent.putExtra("to", new MyPoiInfo(info));
+    this.startActivity(intent);
   }
 
   @Override protected void onStop() {
@@ -203,6 +220,11 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
     switch (v.getId()) {
       case R.id.ibtn_back:
         onBackPressed();
+        break;
+      case R.id.ibtn_map:
+
+        gotoMap(adapter.getData());
+
         break;
       default:
         break;
@@ -285,7 +307,7 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
       }
 
       @Override public void onClick(View v) {
-        ToastHelper.toastShort(PoiSearchActivity.this, "pos:" + pos);
+        gotoMapRouteGuid(data.get(pos));
       }
     }
 
