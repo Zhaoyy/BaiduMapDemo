@@ -6,6 +6,7 @@
 
   <string name="go_to_there">到这儿去</string>
   <string name="tel">电话</string>
+  <string name="tag_offline">点击一次下载离线地图，省时省流量！</string>
 
   <string-array name="array_menu">
     <item>附近搜索</item>
