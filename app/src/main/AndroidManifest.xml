@@ -58,6 +58,10 @@
         android:name=".MapActivity"
         android:screenOrientation="portrait"
         />
+    <activity
+        android:name=".OfflineActivity"
+        android:screenOrientation="portrait"
+        />
 
     <service
         android:name="com.baidu.location.f"

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private Button btn_hotel;
   private Button btn_food;
   private ListView listView;
+  private LinearLayout llOffline;
 
   private BDLocation currentLoc;
   private MHandler mHandler = new MHandler();
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     btn_hotel = (Button) findViewById(R.id.btn_hotel);
     btn_food = (Button) findViewById(R.id.btn_food);
     listView = (ListView) findViewById(R.id.listView);
+    llOffline = (LinearLayout) findViewById(R.id.ll_off_line);
 
     ibtn_back.setOnClickListener(this);
     btn_search.setOnClickListener(this);
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     btn_park.setOnClickListener(this);
     btn_hotel.setOnClickListener(this);
     btn_food.setOnClickListener(this);
+    llOffline.setOnClickListener(this);
 
     et_search.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -194,6 +197,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
   }
 
+  private void gotoOffline() {
+    Intent intent = new Intent(this, OfflineActivity.class);
+    startActivity(intent);
+  }
+
   @Override public void onClick(View v) {
     switch (v.getId()) {
       case R.id.ibtn_back:
@@ -213,6 +221,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         break;
       case R.id.btn_park:
         gotoSearchResult("停车场");
+        break;
+      case R.id.ll_off_line:
+        gotoOffline();
         break;
       default:
         break;
