@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:minHeight="40dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/btn_bg_white_black"
+    >
+
+  <TextView
+      android:id="@+id/tv_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/text_black_1"
+      android:textSize="14sp"
+      />
+
+  <TextView
+      android:id="@+id/tv_status"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1.0"
+      android:textSize="12sp"
+      />
+
+  <TextView
+      android:id="@+id/tv_size"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/text_black_1"
+      android:textSize="12sp"
+      />
+
+  <ImageView
+      android:id="@+id/iv_flag"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:scaleType="center"
+      android:contentDescription="@string/app_name"
+      />
+
+</LinearLayout>

@@ -59,11 +59,44 @@
 
   </RelativeLayout>
 
+  <LinearLayout
+      android:id="@+id/ll_off_line"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="4dp"
+      android:minHeight="16dp"
+      android:orientation="horizontal"
+      android:background="@color/ics_orange_dark_half"
+      android:gravity="center_vertical"
+      >
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:textSize="12sp"
+        android:textColor="@color/orange_dark"
+        android:gravity="center"
+        android:text="@string/sug_wifi"
+        />
+
+  </LinearLayout>
+
   <baidumapsdk.demo.view.PinnedSectionListView
       android:id="@+id/listView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:dividerHeight="1px"
+      />
+
+  <ExpandableListView
+      android:id="@+id/ex_listView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:dividerHeight="1px"
+      android:visibility="gone"
+      android:groupIndicator="@null"
+      android:scrollbars="none"
       />
 
 </LinearLayout>

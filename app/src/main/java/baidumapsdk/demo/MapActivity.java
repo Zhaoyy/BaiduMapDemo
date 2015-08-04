@@ -198,7 +198,7 @@ public class MapActivity extends Activity
       // 设置默认比例尺15（20-3）
       MapStatusUpdate update =
           MapStatusUpdateFactory.newLatLngZoom(new LatLng(cLoc.getLatitude(), cLoc.getLongitude()),
-              15);
+              baiduMap.getMapStatus().zoom);
 
       baiduMap.animateMapStatus(update);
     }
