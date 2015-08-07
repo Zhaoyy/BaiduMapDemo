@@ -115,7 +115,15 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
         Log.e(TAG, poiResult.error + "");
 
         if (poiResult.error == PoiResult.ERRORNO.NO_ERROR) {
-          adapter.setData(poiResult.getAllPoi());
+
+          List<PoiInfo> data = new ArrayList<PoiInfo>();
+          for (PoiInfo info : poiResult.getAllPoi()) {
+            if (info.location != null) {
+              data.add(info);
+            }
+          }
+
+          adapter.setData(data);
         } else if (poiResult.error == PoiResult.ERRORNO.ST_EN_TOO_NEAR) {
           Toast.makeText(PoiSearchActivity.this, "就在附近，好好找找", Toast.LENGTH_SHORT).show();
         }
