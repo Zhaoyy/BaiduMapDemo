@@ -298,7 +298,7 @@ public class PoiSearchActivity extends AppCompatActivity implements View.OnClick
       double distance = DistanceUtil.getDistance(cLatLng, info.location);
 
       if (distance > 1000) {
-        holder.tv_distance.setText(String.format("%.2f千米", distance / 100.0));
+        holder.tv_distance.setText(String.format("%.2f千米", distance / 1000.0));
       } else {
         holder.tv_distance.setText(String.format("%d米", (int) distance));
       }
