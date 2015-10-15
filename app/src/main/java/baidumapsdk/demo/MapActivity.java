@@ -224,6 +224,7 @@ public class MapActivity extends Activity
     overlayManager.addToMap();
     // add maker click listener
     baiduMap.setOnMarkerClickListener(overlayManager);
+    baiduMap.removeMarkerClickListener(drivingRouteOverlay);
   }
 
   // 请求线路规划
@@ -258,6 +259,7 @@ public class MapActivity extends Activity
           baiduMap.clear();
           drivingRouteOverlay = new DrivingRouteOverlay(baiduMap);
           baiduMap.setOnMarkerClickListener(drivingRouteOverlay);
+          baiduMap.removeMarkerClickListener(overlayManager);
           drivingRouteOverlay.setData(drivingRouteResult.getRouteLines().get(0));
           drivingRouteOverlay.addToMap();
           drivingRouteOverlay.zoomToSpan();
